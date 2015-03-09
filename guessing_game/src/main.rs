@@ -1,6 +1,11 @@
+//! A guessing-the-number game implementation.
+
+extern crate guessing_game;
+
 use std::old_io;
 use std::rand;
 use std::cmp::Ordering;
+use guessing_game::compare;
 
 fn main () {
     println!("Guess a number!");
@@ -8,8 +13,6 @@ fn main () {
     let secret_number = (rand::random::<u32>() % 100) + 1;
 
 loop {
-
-
         println!("Please input your guess.");
 
         let input = old_io::stdin().read_line()
@@ -28,7 +31,7 @@ loop {
 
         println!("You guessed: {:?}", num);
 
-        match cmp(num, secret_number) {
+        match compare::cmp(num, secret_number) {
             Ordering::Less => println!("Too small!"),
             Ordering::Greater => println!("Too big!"),
             Ordering::Equal => {
@@ -39,8 +42,21 @@ loop {
     }
 }
 
-fn cmp(a: u32, b: u32) -> Ordering {
-    if a < b { Ordering::Less }
-    else if a > b { Ordering::Greater }
-    else { Ordering::Equal }
+
+#[cfg(test)]
+mod tests {
+    
+    use guessing_game::compare;
+    use std::cmp::Ordering;
+    
+    #[test]
+    fn main_level_test() {
+        assert_eq!(Ordering::Less, compare::cmp(2, 3));
+    }
+    
+    #[test]
+    #[should_fail(expected = "assertion failed")]
+    fn main_level_fail_check() {
+        assert_eq!(Ordering::Equal, compare::cmp(1, 2));
+    }
 }
