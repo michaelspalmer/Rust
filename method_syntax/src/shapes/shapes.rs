@@ -50,3 +50,52 @@ impl CircleBuilder {
         Circle { x: self.coordinate_x, y: self.coordinate_y, radius: self.radius }
     }
 }
+
+pub struct Square {
+    pub x: f64,
+    pub y: f64,
+    pub side: f64,
+}
+
+impl Square {
+
+    pub fn new(x: f64, y: f64, side: f64) -> Square {
+        Square { x: x,
+                 y: y,
+                 side: side,
+        }
+    }
+    
+    pub fn area(&self) -> f64 {
+        self.side * self.side
+    }
+}
+
+pub struct SquareBuilder {
+    pub x: f64,
+    pub y: f64,
+    pub side: f64,
+}
+
+impl SquareBuilder {
+    pub fn new() -> SquareBuilder {
+        SquareBuilder { x: 0.0, y: 0.0, side: 1.0 }
+    }
+    
+    pub fn coordinate(&mut self, coordinate_x: f64, coordinate_y: f64) -> &mut SquareBuilder {
+        self.x = coordinate_x;
+        self.y = coordinate_y;
+        self
+    }
+    
+    pub fn side(&mut self, side: f64) -> &mut SquareBuilder {
+        self.side = side;
+        self
+    }
+    
+    pub fn finalize(&self) -> Square {
+        Square{ x: self.x, y: self.y, side: self.side }
+    }
+}
+
+
