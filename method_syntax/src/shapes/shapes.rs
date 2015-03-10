@@ -18,9 +18,9 @@ impl Circle {
     pub fn area(&self) -> f64 {
         consts::PI * (self.radius * self.radius)
     }
-    
-    pub fn grow(&self) -> Circle {
-        Circle { x: self.x, y: self.y, radius: (self.radius * 10.0) }
+
+    pub fn grow(&self, mult: f64) -> Circle {
+        Circle { x: self.x, y: self.y, radius: (self.radius * mult) }
     }
 }
 
@@ -34,18 +34,18 @@ impl CircleBuilder {
     pub fn new() -> CircleBuilder {
         CircleBuilder { coordinate_x: 0.0, coordinate_y: 0.0, radius: 1.0 }
     }
-    
+
     pub fn coordinate(&mut self, coordinate_x: f64, coordinate_y: f64) -> &mut CircleBuilder {
         self.coordinate_x = coordinate_x;
         self.coordinate_y = coordinate_y;
         self
     }
-    
+
     pub fn radius(&mut self, radius: f64) -> &mut CircleBuilder {
         self.radius = radius;
         self
     }
-    
+
     pub fn finalize(&self) -> Circle {
         Circle { x: self.coordinate_x, y: self.coordinate_y, radius: self.radius }
     }
