@@ -1,4 +1,3 @@
-
 use std::rand;
 use std::collections::HashMap;
 use std::rand::distributions::{IndependentSample, Range};

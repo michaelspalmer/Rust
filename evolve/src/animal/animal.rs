@@ -36,6 +36,10 @@ pub fn animal_move(animal: &mut Animal) {
     animal.energy -= 1;
 }
 
+pub fun animal_turn(animal: &mut Animal) {
+    // they need to turn because right now they all move in the same direction!
+}
+
 pub fn animal_eat(animal: &mut Animal, plants: &mut HashMap<(i32, i32), bool>, plant_energy: i32) {
 
     let pos = (animal.x, animal.y);
@@ -47,25 +51,25 @@ pub fn animal_eat(animal: &mut Animal, plants: &mut HashMap<(i32, i32), bool>, p
 }
 
 pub fn animal_reproduce(animal: &mut Animal, rep_energy: i32) -> bool {
-    
+
     if animal.energy >= rep_energy {
-        animal.energy /= 2 as i32;
+        animal.energy /= 2;
         return true
     }
     false
 }
 
 pub fn copy_animal(animal: &mut Animal) -> Animal {
-    
+
     let new_animal = Animal::new(animal.x,
                                  animal.y,
                                  animal.energy,
                                  animal.dir,
-                                 animal.genes,
+                                 animal.genes, //add a function that returns a [i32] to modify this
                                  animal.alive);
     new_animal
 }
-                                 
+
 
 pub fn add_animal(animal: Animal, animals: &mut Vec<Animal>) {
 
@@ -73,6 +77,6 @@ pub fn add_animal(animal: Animal, animals: &mut Vec<Animal>) {
 }
 
 pub fn is_alive(animal: &mut Animal) {
-    
+
     if animal.energy < 1 { animal.alive = false };
 }
