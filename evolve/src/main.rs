@@ -13,7 +13,7 @@ fn main() {
 
     let width: i32 = 100;
     let height: i32 = 30;
-    let jungle: [i32; 4] = [45, 10, width, height];
+    let jungle: [i32; 4] = [45, 10, 55, 20];
     let plant_energy: i32 = 80;
     let reproduction_energy: i32 = 200;
     let mut plants: HashMap<(i32, i32), bool> = HashMap::new();
@@ -22,8 +22,8 @@ fn main() {
                                                                     1000,
                                                                     0,
                                                                    [1, 1, 10, 1, 10, 1, 1, 1],
-                                                                    true)];
-     for _ in 0..5 {
+                                                                    true)];                                                                
+     for _ in 0..1 {
         functions::simulate_day(&mut animals,
                                 &mut plants,
                                 plant_energy,
@@ -32,7 +32,7 @@ fn main() {
                                 width,
                                 height);
     }
-    
+
     println!("Total Animals: {}", animals.len());
 
     let range = 0..animals.len();
@@ -44,13 +44,9 @@ fn main() {
             // animals[i].show();
         }
     }
-    
-    for plant in plants.iter() {
-        println!("{:?}", plant);
-    }
-    
+
     println!("Total Plants: {}", plants.len());
     println!("Living Animals: {}", count);
-    
+
     functions::draw_world(animals, plants, width, height);
 }
