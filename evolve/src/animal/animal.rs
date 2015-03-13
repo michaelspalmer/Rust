@@ -1,4 +1,8 @@
+use std::rand;
+use std::rand::Rng;
 use std::collections::HashMap;
+use std::rand::distributions::{IndependentSample, Range};
+
 
 pub struct Animal {
     pub x:      i32,
@@ -21,23 +25,30 @@ impl Animal {
     }
 }
 
-pub fn animal_move(animal: &mut Animal) {
+pub fn animal_move(animal: &mut Animal, width: i32, height: i32) {
 
     let dir = animal.dir;
-
-    animal.x = if dir >= 2 && dir < 5  { animal.x + 1 }
-          else if dir == 1 || dir == 5 { animal.x }
-          else { animal.x - 1};
-
-    animal.y = if dir >= 0 && dir < 3 { animal.y - 1 }
-          else if dir >= 4 && dir < 7 { animal.y + 1 }
-          else { animal.y };
+    
+    animal.x = ( animal.x + (if dir >= 2 && dir < 5  { 1 }
+           else if dir == 1 || dir == 5 { 0 }
+           else { -1 }) + width) % width;
+           
+    animal.y = (animal.y + (if dir >= 0 && dir < 3 { -1 }
+           else if dir >= 4 && dir < 7 { 1  }
+           else { 0 }) + height) % height;
 
     animal.energy -= 1;
 }
 
-pub fun animal_turn(animal: &mut Animal) {
-    // they need to turn because right now they all move in the same direction!
+pub fn animal_turn(animal: &mut Animal) {
+    
+    // animal.dir = SignedInt::abs(rand::random::<i32>() % 8);
+    
+    if animal.genes[((animal.x + animal.y) % 8) as usize] > 5 {
+        animal.dir += 1;
+    } else {
+        animal.dir -= 1;
+    }
 }
 
 pub fn animal_eat(animal: &mut Animal, plants: &mut HashMap<(i32, i32), bool>, plant_energy: i32) {
@@ -61,11 +72,15 @@ pub fn animal_reproduce(animal: &mut Animal, rep_energy: i32) -> bool {
 
 pub fn copy_animal(animal: &mut Animal) -> Animal {
 
-    let new_animal = Animal::new(animal.x,
-                                 animal.y,
+    let mut genes = animal.genes;
+    
+    genes[((animal.x + animal.y) % 8) as usize] += 8; 
+
+    let new_animal = Animal::new(animal.x + 1,
+                                 animal.y - 1,
                                  animal.energy,
                                  animal.dir,
-                                 animal.genes, //add a function that returns a [i32] to modify this
+                                 genes, //add a function that returns a [i32] to modify this
                                  animal.alive);
     new_animal
 }
@@ -80,3 +95,27 @@ pub fn is_alive(animal: &mut Animal) {
 
     if animal.energy < 1 { animal.alive = false };
 }
+
+pub fn remove_dead(animals: &mut Vec<Animal>) {
+    
+    let range = 0..animals.len();
+    let mut hold_animal: Animal;
+    
+    for i in range {
+        if !animals[i].alive { 
+            hold_animal = animals.remove(i as usize);
+            animals.push(hold_animal);
+        };
+    }
+    
+    let range_two = 0..animals.len();
+    
+    for i in range_two {
+        if i != (animals.len() - 1) {
+            if !animals[i].alive {
+                animals.pop();
+            }
+        }
+    }
+}
+        
