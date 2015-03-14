@@ -1,52 +1,43 @@
 #![feature(rand)]
-
 extern crate evolve;
 
 use std::collections::HashMap;
 use evolve::animal::animal;
 use evolve::functions::functions;
 
-use std::rand;
-use std::num::SignedInt;
-
 fn main() {
 
-    let width: i32 = 100;
-    let height: i32 = 30;
-    let jungle: [i32; 4] = [45, 10, 55, 20];
+    let width: i32 = 50;
+    let height: i32 = 20;
     let plant_energy: i32 = 80;
+    let mut time_count: i32 = 0;
     let reproduction_energy: i32 = 200;
     let mut plants: HashMap<(i32, i32), bool> = HashMap::new();
     let mut animals: Vec<animal::Animal> = vec![animal::Animal::new(width  / 2,
                                                                     height / 2,
-                                                                    1000,
+                                                                    500,
                                                                     0,
-                                                                   [1, 1, 10, 1, 10, 1, 1, 1],
-                                                                    true)];                                                                
-     for _ in 0..1 {
-        functions::simulate_day(&mut animals,
-                                &mut plants,
-                                plant_energy,
-                                reproduction_energy,
-                                jungle,
-                                width,
-                                height);
-    }
-
-    println!("Total Animals: {}", animals.len());
-
-    let range = 0..animals.len();
-    let mut count = 0;
-
-    for i in range {
-        if animals[i].alive {
-            count += 1;
-            // animals[i].show();
+                                                                    animal::gen_genes(),
+                                                                    true)];                
+    loop {
+        let user_input: i32 = functions::ask_for_input();
+        time_count += user_input;
+        
+        for _ in 0..user_input {
+            functions::simulate_day(&mut animals,
+                                    &mut plants,
+                                    plant_energy,
+                                    reproduction_energy,
+                                    width,
+                                    height);
         }
+        
+        print!("{} days passed\t", time_count);
+        print!(" {} years passed\t",time_count / 365 as i32);
+        print!(" Total Animals: {}\t", animals.len());
+        print!(" Total Plants: {}\t", plants.len());
+        
+    functions::draw_world(&animals, &plants, width, height);
+    println!("{:?}", animals[0].show());
     }
-
-    println!("Total Plants: {}", plants.len());
-    println!("Living Animals: {}", count);
-
-    functions::draw_world(animals, plants, width, height);
 }

@@ -3,3 +3,4 @@
 name = "evolve"
 version = "0.0.1"
 authors = ["mstephenp <mpalmer1661@gmail.com>"]
+rand = "0.2.0"
