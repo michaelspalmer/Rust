@@ -7,7 +7,7 @@ pub fn random_plant(w: i32, h: i32, jungle: bool) -> (i32, i32) {
     let mut rng = rand::thread_rng();
     let width;
     let height;
-    
+
     if jungle {
         width = Range::new(w / 3, (w / 3) + 10);
         height = Range::new(h / 3, (h / 3) + 10);

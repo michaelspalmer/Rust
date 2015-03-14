@@ -13,9 +13,9 @@ pub fn simulate_day(animals: &mut Vec<animal::Animal>,
                     height: i32)
 {
     let range = 0..animals.len();
-    
+
     plant::add_plants(plants, width, height);
-    
+
     for i in range {
         if animals[i].alive {
             animal::animal_turn(&mut animals[i]);
@@ -30,46 +30,54 @@ pub fn simulate_day(animals: &mut Vec<animal::Animal>,
     animal::remove_dead(animals);
 }
 
-pub fn draw_world(animals: &Vec<animal::Animal>, 
-                  plants: &HashMap<(i32, i32), bool>, 
-                  width: i32, 
-                  height: i32) 
+pub fn draw_world(animals: &Vec<animal::Animal>,
+                  plants: &HashMap<(i32, i32), bool>,
+                  width: i32,
+                  height: i32)
 {
     let mut has_animal: bool;
-    
+
     for y in 0..height {
-    
+
         print!("\n");
         print!("|");
-        
+
         for x in 0..width {
-        
+
             let pos = (x as i32, y as i32);
             has_animal = false;
-            
+
             for animal in animals.iter() {
-            
-                if animal.x == x && animal.y == y && animal.alive { 
-                
+
+                if animal.x == x && animal.y == y && animal.alive {
+
                     print!("\x1b[31mM\x1b[0m");
                     has_animal = true;
                 }
             }
             if has_animal {
-            
+
                 continue;
-                
-            } else if plants.contains_key(&pos) { 
-                if gen_random_nbr(1,3) == 1 {
+
+            } else if plants.contains_key(&pos) {
+
+                let flower_num = gen_random_nbr(1,3);
+
+                if flower_num == 1 {
+
                     print!("\x1b[32m*\x1b[0m");
-                } else if gen_random_nbr(1,3) == 2 {
+
+                } else if flower_num == 2 {
+
                     print!("\x1b[33m*\x1b[0m");
+                    
                 } else {
+
                     print!("\x1b[34m*\x1b[0m");
                 }
-            } else { 
-            
-                print!(" "); 
+            } else {
+
+                print!(" ");
             }
         }
         print!("|");
@@ -78,12 +86,12 @@ pub fn draw_world(animals: &Vec<animal::Animal>,
 }
 
 pub fn ask_for_input() -> i32 {
-    
+
     let mut input = old_io::stdin().read_line().ok().expect("I/O Failure!");
-    
+
     let shorten_by = input.len() - 1;
     input.truncate(shorten_by);
-    
+
     match input.parse() {
         Ok(n)    => n,
         Err(msg) => 0,
@@ -95,6 +103,6 @@ pub fn gen_random_nbr(low: i32, high: i32) -> i32 {
     let mut rng = rand::thread_rng();
     let bound = Range::new(low, high);
     let return_nbr = bound.ind_sample(&mut rng);
-    
+
     return_nbr
 }
