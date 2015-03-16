@@ -1,10 +1,5 @@
-use std::rand;
-use std::rand::Rng;
 use std::num::SignedInt;
-use functions::functions;
 use std::collections::HashMap;
-use std::rand::distributions::{IndependentSample, Range};
-
 
 pub struct Animal {
     pub x:      i32,
@@ -25,116 +20,53 @@ impl Animal {
         println!("x: {}, y: {}\nenergy: {}\ndir: {}\nalive: {}\ngenes: {:?}",
                  self.x, self.y, self.energy, self.dir, self.alive, self.genes)
     }
-}
 
-pub fn animal_move(animal: &mut Animal, width: i32, height: i32) {
+    pub fn ani_move(&mut self, width: i32, height: i32) {
 
-    let dir = animal.dir;
+        self.x = ( self.x + (if self.dir >= 2 && self.dir < 5 { 1 }
+                else if self.dir == 1 || self.dir == 5 { 0 }
+                else { -1 }) + width) % width;
 
-    animal.x = ( animal.x + (if dir >= 2 && dir < 5  { 1 }
-           else if dir == 1 || dir == 5 { 0 }
-           else { -1 }) + width) % width;
+        self.y = (self.y + (if self.dir >= 0 && self.dir < 3 { -1 }
+                else if self.dir >= 4 || self.dir < 7 { 1 }
+                else { 0 }) + height) % height;
 
-    animal.y = (animal.y + (if dir >= 0 && dir < 3 { -1 }
-           else if dir >= 4 && dir < 7 { 1  }
-           else { 0 }) + height) % height;
-
-    animal.energy -= 1;
-}
-
-pub fn animal_turn(animal: &mut Animal) {
-
-    // this needs work - add in something similar to what he has.
-    if animal.genes[((animal.x + animal.y) % 8) as usize] > 5 {
-        animal.dir += 1;
-    } else {
-        animal.dir -= 1;
+        self.energy -= 1;
     }
 
-    animal.dir = SignedInt::abs(animal.dir % 8);
-}
+    pub fn turn(&mut self) {
 
-pub fn animal_eat(animal: &mut Animal, plants: &mut HashMap<(i32, i32), bool>, plant_energy: i32) {
+        // this needs work - add in something similar to what he has.
+        if self.genes[((self.x + self.y) % 8) as usize] > 5 {
+            self.dir += 1;
+        } else {
+            self.dir -= 1;
+        }
 
-    let pos = (animal.x, animal.y);
-
-    if plants.contains_key(&pos) {
-        animal.energy += plant_energy;
-        plants.remove(&pos);
+        self.dir = SignedInt::abs(self.dir % 8);
     }
-}
 
-pub fn animal_reproduce(animal: &mut Animal, rep_energy: i32) -> bool {
+    pub fn eat(&mut self, plants: &mut HashMap<(i32, i32), bool>, plant_energy: i32) {
 
-    if animal.energy >= rep_energy {
-        animal.energy /= 2;
-        return true
-    }
-    false
-}
+        let pos = (self.x, self.y);
 
-pub fn copy_animal(animal: &mut Animal) -> Animal {
-
-    let mut new_animal = Animal::new(animal.x,
-                                 animal.y,
-                                 animal.energy,
-                                 (animal.dir + 1) % 8,
-                                 animal.genes.clone(),
-                                 animal.alive);
-    mut_gene(&mut new_animal);
-    new_animal
-}
-
-pub fn add_animal(animal: Animal, animals: &mut Vec<Animal>) {
-
-    animals.push(animal);
-}
-
-pub fn is_alive(animal: &mut Animal) {
-
-    if animal.energy < 1 { animal.alive = false };
-}
-
-pub fn remove_dead(animals: &mut Vec<Animal>) {
-
-
-    let range = 0..animals.len();
-    let mut count: i32 = 0;
-    let mut hold: Animal;
-    let length = animals.len();
-
-    for i in range {
-        if !animals[i].alive {
-           hold = animals.remove(i as usize);
-           animals.push(hold);
-           count += 1;
+        if plants.contains_key(&pos) {
+            self.energy += plant_energy;
+            plants.remove(&pos);
         }
     }
-    animals.truncate(length - count as usize);
-}
 
-pub fn gen_genes() -> Vec<i32> {
+    pub fn reproduce(&mut self, rep_energy: i32) -> bool {
 
-    let mut genes: Vec<i32> = vec![];
-    let range   = 0..8;
-
-    for _ in range {
-        genes.push(functions::gen_random_nbr(0, 10));
+        if self.energy >= rep_energy {
+            self.energy /= 2;
+            return true
+        }
+        false
     }
-    genes
-}
 
-pub fn mut_gene(animal: &mut Animal) {
+    pub fn is_alive(&mut self) {
 
-    let mutation_val = Range::new(0, 3);
-    let index = Range::new(0, animal.genes.len());
-    let mut rng = rand::thread_rng();
-
-    let mut mutation: i32 = mutation_val.ind_sample(&mut rng);
-    let index = index.ind_sample(&mut rng);
-    // let len = animal.genes.len();
-    // let mut mutation: i32 = functions::gen_random_nbr(0, 3);
-    // let index = functions::gen_random_nbr(0, len as i32);
-
-    animal.genes[index] += mutation;
+        if self.energy < 1 { self.alive = false };
+    }
 }

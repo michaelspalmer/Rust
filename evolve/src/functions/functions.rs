@@ -5,44 +5,104 @@ use animal::animal;
 use std::collections::HashMap;
 use std::rand::distributions::{IndependentSample, Range};
 
+static PLANT_ENERGY: i32 = 80;
+static REPRODUCTION_ENERGY: i32 = 200;
+// use 150 X 50 with jungle 40 X 20 for big screen
+static WIDTH: i32 = 100;
+static HEIGHT: i32 = 30;
+
 pub fn simulate_day(animals: &mut Vec<animal::Animal>,
-                    plants: &mut HashMap<(i32, i32), bool>,
-                    plant_energy: i32,
-                    reproduction_energy: i32,
-                    width: i32,
-                    height: i32)
+                    plants: &mut HashMap<(i32, i32), bool>,)
 {
     let range = 0..animals.len();
 
-    plant::add_plants(plants, width, height);
+    plant::add_plants(plants, WIDTH, HEIGHT);
 
     for i in range {
         if animals[i].alive {
-            animal::animal_turn(&mut animals[i]);
-            animal::animal_move(&mut animals[i], width, height);
-            animal::animal_eat(&mut animals[i], plants, plant_energy);
-            if animal::animal_reproduce(&mut animals[i], reproduction_energy) {
-                animal::add_animal(animal::copy_animal(&mut animals[i]), animals);
+            animals[i].turn();
+            animals[i].ani_move(WIDTH, HEIGHT);
+            animals[i].eat(plants, PLANT_ENERGY);
+            if animals[i].reproduce(REPRODUCTION_ENERGY) {
+                add_animal(copy_animal(&mut animals[i]), animals);
             }
-            animal::is_alive(&mut animals[i]);
+            animals[i].is_alive();
         }
     }
-    animal::remove_dead(animals);
+    remove_dead(animals);
+}
+
+pub fn copy_animal(animal: &mut animal::Animal) -> animal::Animal {
+
+    let mut new_animal = animal::Animal::new(animal.x,
+                                             animal.y,
+                                             animal.energy,
+                                            (animal.dir + 1) % 8,
+                                             animal.genes.clone(),
+                                             animal.alive);
+    mut_gene(&mut new_animal);
+    new_animal
+}
+
+pub fn add_animal(animal: animal::Animal, animals: &mut Vec<animal::Animal>) {
+
+    animals.push(animal);
+}
+
+pub fn gen_genes() -> Vec<i32> {
+
+    let mut genes: Vec<i32> = vec![];
+    let range   = 0..8;
+
+    for _ in range {
+        genes.push(gen_random_nbr(0, 10));
+    }
+    genes
+}
+
+pub fn mut_gene(animal: &mut animal::Animal) {
+
+    let mutation_val = Range::new(0, 3);
+    let index = Range::new(0, animal.genes.len());
+    let mut rng = rand::thread_rng();
+
+    let mutation: i32 = mutation_val.ind_sample(&mut rng);
+    let index = index.ind_sample(&mut rng);
+    // let len = animal.genes.len();
+    // let mut mutation: i32 = functions::gen_random_nbr(0, 3);
+    // let index = functions::gen_random_nbr(0, len as i32);
+
+    animal.genes[index] += mutation;
+}
+
+pub fn remove_dead(animals: &mut Vec<animal::Animal>) {
+
+    let range = 0..animals.len();
+    let mut count: i32 = 0;
+    let mut hold: animal::Animal;
+    let length = animals.len();
+
+    for i in range {
+        if !animals[i].alive {
+           hold = animals.remove(i as usize);
+           animals.push(hold);
+           count += 1;
+        }
+    }
+    animals.truncate(length - count as usize);
 }
 
 pub fn draw_world(animals: &Vec<animal::Animal>,
-                  plants: &HashMap<(i32, i32), bool>,
-                  width: i32,
-                  height: i32)
+                  plants: &HashMap<(i32, i32), bool>)
 {
     let mut has_animal: bool;
 
-    for y in 0..height {
+    for y in 0..HEIGHT {
 
         print!("\n");
         print!("|");
 
-        for x in 0..width {
+        for x in 0..WIDTH {
 
             let pos = (x as i32, y as i32);
             has_animal = false;
@@ -70,7 +130,7 @@ pub fn draw_world(animals: &Vec<animal::Animal>,
                 } else if flower_num == 2 {
 
                     print!("\x1b[33m*\x1b[0m");
-                    
+
                 } else {
 
                     print!("\x1b[34m*\x1b[0m");
@@ -93,8 +153,8 @@ pub fn ask_for_input() -> i32 {
     input.truncate(shorten_by);
 
     match input.parse() {
-        Ok(n)    => n,
-        Err(msg) => 0,
+        Ok(n)  => n,
+        Err(_) => 0,
     }
 }
 
