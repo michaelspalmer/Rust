@@ -1,6 +1,7 @@
 use std::rand;
 use std::rand::Rng;
 use std::num::SignedInt;
+use functions::functions;
 use std::collections::HashMap;
 use std::rand::distributions::{IndependentSample, Range};
 
@@ -115,13 +116,10 @@ pub fn remove_dead(animals: &mut Vec<Animal>) {
 pub fn gen_genes() -> Vec<i32> {
 
     let mut genes: Vec<i32> = vec![];
-
-    let between = Range::new(0, 10);
-    let mut rng = rand::thread_rng();
     let range   = 0..8;
 
     for _ in range {
-        genes.push(between.ind_sample(&mut rng));
+        genes.push(functions::gen_random_nbr(0, 10));
     }
     genes
 }
@@ -134,6 +132,9 @@ pub fn mut_gene(animal: &mut Animal) {
 
     let mut mutation: i32 = mutation_val.ind_sample(&mut rng);
     let index = index.ind_sample(&mut rng);
+    // let len = animal.genes.len();
+    // let mut mutation: i32 = functions::gen_random_nbr(0, 3);
+    // let index = functions::gen_random_nbr(0, len as i32);
 
     animal.genes[index] += mutation;
 }
