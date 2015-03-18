@@ -1,6 +1,6 @@
-use std::rand;
+use rand::Rng;
 use std::collections::HashMap;
-use std::rand::distributions::{IndependentSample, Range};
+use rand::distributions::{IndependentSample, Range};
 
 pub fn random_plant(w: i32, h: i32, jungle: bool) -> (i32, i32) {
 

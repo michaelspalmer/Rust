@@ -45,6 +45,8 @@ impl Animal {
 
         self.dir = SignedInt::abs(self.dir % 8);
     }
+    
+    
 
     pub fn eat(&mut self, plants: &mut HashMap<(i32, i32), bool>, plant_energy: i32) {
 
