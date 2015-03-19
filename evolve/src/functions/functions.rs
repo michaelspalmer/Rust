@@ -1,6 +1,5 @@
 use std::rand;
 use std::old_io;
-use plant::plant;
 use animal::animal;
 use std::collections::HashMap;
 use std::rand::distributions::{IndependentSample, Range};
@@ -16,7 +15,7 @@ pub fn simulate_day(animals: &mut Vec<animal::Animal>,
 {
     let range = 0..animals.len();
 
-    plant::add_plants(plants, WIDTH, HEIGHT);
+   add_plants(plants, WIDTH, HEIGHT);
 
     for i in range {
         if animals[i].alive {
@@ -68,9 +67,9 @@ pub fn mut_gene(animal: &mut animal::Animal) {
 
     let mutation: i32 = mutation_val.ind_sample(&mut rng);
     let index = index.ind_sample(&mut rng);
-    // let len = animal.genes.len();
-    // let mut mutation: i32 = functions::gen_random_nbr(0, 3);
-    // let index = functions::gen_random_nbr(0, len as i32);
+    // let len = animal.genes.len() as i32;
+    // let mut mutation: i32 = gen_random_nbr(0, 3);
+    // let index = gen_random_nbr(0, len);
 
     animal.genes[index] += mutation;
 }
@@ -96,6 +95,7 @@ pub fn draw_world(animals: &Vec<animal::Animal>,
                   plants: &HashMap<(i32, i32), bool>)
 {
     let mut has_animal: bool;
+    let mut pos: (i32, i32);
 
     for y in 0..HEIGHT {
 
@@ -104,41 +104,26 @@ pub fn draw_world(animals: &Vec<animal::Animal>,
 
         for x in 0..WIDTH {
 
-            let pos = (x as i32, y as i32);
+            pos = (x, y);
             has_animal = false;
 
             for animal in animals.iter() {
-
                 if animal.x == x && animal.y == y && animal.alive {
-
                     print!("\x1b[31mM\x1b[0m");
                     has_animal = true;
                 }
             }
-            if has_animal {
-
-                continue;
-
-            } else if plants.contains_key(&pos) {
-
+            
+            if has_animal { continue; }
+            
+            else if plants.contains_key(&pos) {
                 let flower_num = gen_random_nbr(1,3);
-
-                if flower_num == 1 {
-
-                    print!("\x1b[32m*\x1b[0m");
-
-                } else if flower_num == 2 {
-
-                    print!("\x1b[33m*\x1b[0m");
-
-                } else {
-
-                    print!("\x1b[34m*\x1b[0m");
-                }
-            } else {
-
-                print!(" ");
-            }
+                
+                     if flower_num == 1 { print!("\x1b[32m*\x1b[0m"); } 
+                else if flower_num == 2 { print!("\x1b[33m*\x1b[0m"); } 
+                else                    { print!("\x1b[34m*\x1b[0m"); }
+                   
+            } else { print!(" "); }
         }
         print!("|");
     }
@@ -161,8 +146,35 @@ pub fn ask_for_input() -> i32 {
 pub fn gen_random_nbr(low: i32, high: i32) -> i32 {
 
     let mut rng = rand::thread_rng();
-    let bound = Range::new(low, high);
-    let return_nbr = bound.ind_sample(&mut rng);
+    let bound   = Range::new(low, high);
+    let rtn_nbr = bound.ind_sample(&mut rng);
 
-    return_nbr
+    rtn_nbr
+}
+
+pub fn random_plant(w: i32, h: i32, jungle: bool) -> (i32, i32) {
+
+    let mut rng = rand::thread_rng();
+    let width;
+    let height;
+
+    if jungle {
+        width  = Range::new(w / 3, (w / 3) + 10);
+        height = Range::new(h / 3, (h / 3) + 10);
+    } else {
+        width  = Range::new(0, w);
+        height = Range::new(0, h);
+    }
+
+    let x =  width.ind_sample(&mut rng);
+    let y = height.ind_sample(&mut rng);
+
+    let pos = (x, y);
+
+    pos
+}
+
+pub fn add_plants(plants: &mut HashMap<(i32, i32), bool>, width: i32, height: i32) {
+    plants.insert(random_plant(width, height, false), true);
+    plants.insert(random_plant(width, height, true), true);
 }

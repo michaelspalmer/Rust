@@ -6,14 +6,14 @@ pub struct Animal {
     pub y:      i32,
     pub energy: i32,
     pub dir:    i32,
-    pub genes: Vec<i32>,
-    pub alive: bool,
+    pub genes:  Vec<i32>,
+    pub alive:  bool,
 }
 
 impl Animal {
 
-    pub fn new(x: i32, y: i32, energy: i32, dir: i32, genes: Vec<i32>, alive: bool) -> Animal {
-        Animal { x: x, y: y, energy: energy, dir: dir, genes: genes, alive: alive }
+    pub fn new(x: i32, y: i32, e: i32, d: i32, g: Vec<i32>, a: bool) -> Animal {
+        Animal { x: x, y: y, energy: e, dir: d, genes: g, alive: a }
     }
 
     pub fn show(&self) {
@@ -46,8 +46,6 @@ impl Animal {
         self.dir = SignedInt::abs(self.dir % 8);
     }
     
-    
-
     pub fn eat(&mut self, plants: &mut HashMap<(i32, i32), bool>, plant_energy: i32) {
 
         let pos = (self.x, self.y);
