@@ -28,8 +28,9 @@ impl Animal {
                 else { -1 }) + width) % width;
 
         self.y = (self.y + (if self.dir >= 0 && self.dir < 3 { -1 }
-                else if self.dir >= 4 || self.dir < 7 { 1 }
-                else { 0 }) + height) % height;
+                       else if self.dir >= 4 || self.dir < 7 { 1 }
+                       else { 0 }) 
+                        + height) % height;
 
         self.energy -= 1;
     }
