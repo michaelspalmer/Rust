@@ -21,7 +21,7 @@ fn main() {
                                                                     true)];
     loop {
         user_input = functions::ask_for_input();
-        time_count += user_input;
+        time_count += user_input
 
         for _ in 0..user_input {
             functions::simulate_day(&mut animals, &mut plants);

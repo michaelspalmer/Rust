@@ -56,6 +56,7 @@ pub fn gen_genes() -> Vec<i32> {
     for _ in range {
         genes.push(gen_random_nbr(0, 10));
     }
+    
     genes
 }
 
