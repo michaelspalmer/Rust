@@ -1,11 +1,11 @@
-typedef struct animal {
+typedef struct {
     bool alive;
     int x, y, energy, dir;
     int genes[8];
 } animal;
 
 //this shouldnt be here
-typedef struct plant {
+typedef struct {
 	int x, y;
 } plant;
 
@@ -98,13 +98,13 @@ copy_animal(animal *a)
     b.y = a->y;
     b.energy = a->energy;
     b.dir = (a->dir + 1) % 8;
-    // b.genes = a->genes;
-    gen_genes(&b);
+    b.genes = copy_genes(&a->genes);
     b.alive = true;
     mutate_gene(&b);
     
     return b;
 }
+
 
 void
 init_animal(animal *a)

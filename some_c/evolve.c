@@ -8,7 +8,7 @@ const int REPNRG = 200;
 // const int animals[WIDTH][HEIGHT];
 // const plant plants[];
 
-#include "animal.h
+#include "animal.h"
 
 int main() 
 {
