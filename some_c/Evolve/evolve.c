@@ -1,3 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+const int WIDTH  = 100;
+const int HEIGHT = 30;
+const int REPNRG = 200;
+// const int animals[WIDTH][HEIGHT];
+// const plant plants[];
+
 typedef struct {
     bool alive;
     int x, y, energy, dir;
@@ -98,13 +109,13 @@ copy_animal(animal *a)
     b.y = a->y;
     b.energy = a->energy;
     b.dir = (a->dir + 1) % 8;
-    b.genes = copy_genes(&a->genes);
+    // b.genes = copy_genes(&a->genes);
+    gen_genes(&b);
     b.alive = true;
     mutate_gene(&b);
     
     return b;
 }
-
 
 void
 init_animal(animal *a)
@@ -115,4 +126,24 @@ init_animal(animal *a)
     a->dir = 0;
     a->alive = true;
     gen_genes(a);
+}
+
+int main() 
+{
+    srand(time(NULL));
+    
+    printf("changed");
+    
+    animal animal_a;
+    animal animal_b;
+    // plant plants[WIDTH * HEIGHT];
+    
+    init_animal(&animal_a);
+    animal_b = copy_animal(&animal_a);
+    
+    if(animal_a.alive) show_animal(&animal_a);
+    printf("\n");
+    if(animal_b.alive) show_animal(&animal_b);
+    
+    return 0;
 }
