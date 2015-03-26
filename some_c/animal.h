@@ -1,4 +1,5 @@
 typedef struct {
+	r
     bool alive;
     int x, y, energy, dir;
     int genes[8];
