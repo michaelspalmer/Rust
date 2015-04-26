@@ -56,7 +56,7 @@ pub fn gen_genes() -> Vec<i32> {
     for _ in range {
         genes.push(gen_random_nbr(0, 10));
     }
-    
+
     genes
 }
 
@@ -114,16 +114,16 @@ pub fn draw_world(animals: &Vec<animal::Animal>,
                     has_animal = true;
                 }
             }
-            
+
             if has_animal { continue; }
-            
+
             else if plants.contains_key(&pos) {
                 let flower_num = gen_random_nbr(1,3);
-                
-                     if flower_num == 1 { print!("\x1b[32m*\x1b[0m"); } 
-                else if flower_num == 2 { print!("\x1b[33m*\x1b[0m"); } 
+
+                     if flower_num == 1 { print!("\x1b[32m*\x1b[0m"); }
+                else if flower_num == 2 { print!("\x1b[33m*\x1b[0m"); }
                 else                    { print!("\x1b[34m*\x1b[0m"); }
-                   
+
             } else { print!(" "); }
         }
         print!("|");

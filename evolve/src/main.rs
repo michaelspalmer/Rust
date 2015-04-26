@@ -13,15 +13,15 @@ fn main() {
     let mut user_input: i32;
     let mut time_count: i32 = 0;
     let mut plants: HashMap<(i32, i32), bool> = HashMap::new();
-    let mut animals: Vec<animal::Animal> = vec![animal::Animal::new(WIDTH / 2, 
-                                                                    HEIGHT / 2, 
-                                                                    1000, 
+    let mut animals: Vec<animal::Animal> = vec![animal::Animal::new(WIDTH / 2,
+                                                                    HEIGHT / 2,
+                                                                    1000,
                                                                     0,
-                                                        functions::gen_genes(), 
+                                                        functions::gen_genes(),
                                                                     true)];
     loop {
         user_input = functions::ask_for_input();
-        time_count += user_input
+        time_count += user_input;
 
         for _ in 0..user_input {
             functions::simulate_day(&mut animals, &mut plants);
@@ -31,6 +31,6 @@ fn main() {
         print!(" Total Animals: {}\t", animals.len());
         print!(" Total Plants: {}\t", plants.len());
 
-    functions::draw_world(&animals, &plants);
+        functions::draw_world(&animals, &plants);
     }
 }

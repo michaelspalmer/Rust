@@ -1,3 +1,4 @@
+<<<<<<< HEAD:some_c/animal.h
 typedef struct {
 	r
     bool alive;
@@ -27,6 +28,9 @@ mutate_gene(animal *a)
     int mutation = rand() % 3;
     a->genes[index] += mutation;
 }
+=======
+#include "animal.h"
+>>>>>>> c13ad3af534fe6f78b74f4c79efc5fa84ee3365b:some_c/Evolve/animal.c
 
 void
 show_animal(animal *a)
@@ -99,13 +103,13 @@ copy_animal(animal *a)
     b.y = a->y;
     b.energy = a->energy;
     b.dir = (a->dir + 1) % 8;
-    b.genes = copy_genes(&a->genes);
+    // b.genes = copy_genes(&a->genes);
+    gen_genes(&b);
     b.alive = true;
     mutate_gene(&b);
     
     return b;
 }
-
 
 void
 init_animal(animal *a)
